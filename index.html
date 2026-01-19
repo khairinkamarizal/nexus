@@ -921,23 +921,40 @@
             blue: [
                 {name: "Blue 100", hex: "#001438", bg: "bg-trustori-blue100"},
                 {name: "Blue 90", hex: "#002563", bg: "bg-trustori-blue90"},
+                {name: "Blue 80", hex: "#00368F", bg: "bg-trustori-blue80"},
                 {name: "Blue 70", hex: "#0047BA", bg: "bg-trustori-blue70"},
+                {name: "Blue 60", hex: "#1662CD", bg: "bg-trustori-blue60"},
                 {name: "Blue 50", hex: "#2A7DE1", bg: "bg-trustori-blue50"},
+                {name: "Blue 40", hex: "#5294FF", bg: "bg-trustori-blue40"},
                 {name: "Blue 30", hex: "#7FB0FF", bg: "bg-trustori-blue30"},
+                {name: "Blue 20", hex: "#ADCCFF", bg: "bg-trustori-blue20"},
+                {name: "Blue 10", hex: "#D9E9FF", bg: "bg-trustori-blue10"},
                 {name: "Blue 0", hex: "#F2F8FF", bg: "bg-trustori-blue0"}
             ],
             slate: [
+                 {name: "Slate 100", hex: "#0E0F10", bg: "bg-trustori-slate100"},
                  {name: "Slate 90", hex: "#24272A", bg: "bg-trustori-slate90"},
+                 {name: "Slate 80", hex: "#40464C", bg: "bg-trustori-slate80"},
                  {name: "Slate 70", hex: "#5D666E", bg: "bg-trustori-slate70"},
+                 {name: "Slate 60", hex: "#7A848D", bg: "bg-trustori-slate60"},
                  {name: "Slate 50", hex: "#97A1AB", bg: "bg-trustori-slate50"},
+                 {name: "Slate 40", hex: "#B3BCC4", bg: "bg-trustori-slate40"},
+                 {name: "Slate 30", hex: "#CDD3D9", bg: "bg-trustori-slate30"},
                  {name: "Slate 20", hex: "#E1E5E9", bg: "bg-trustori-slate20"},
                  {name: "Slate 10", hex: "#F0F2F5", bg: "bg-trustori-slate10"},
                  {name: "Slate 0", hex: "#F9FAFB", bg: "bg-trustori-slate0"}
             ],
             orange: [
+                 {name: "Orange 100", hex: "#3D0D00", bg: "bg-trustori-orange100"},
+                 {name: "Orange 90", hex: "#611900", bg: "bg-trustori-orange90"},
+                 {name: "Orange 80", hex: "#872600", bg: "bg-trustori-orange80"},
                  {name: "Orange 70", hex: "#B03805", bg: "bg-trustori-orange70"},
+                 {name: "Orange 60", hex: "#D94F11", bg: "bg-trustori-orange60"},
                  {name: "Orange 50", hex: "#FF671D", bg: "bg-trustori-orange50"},
+                 {name: "Orange 40", hex: "#FF9057", bg: "bg-trustori-orange40"},
                  {name: "Orange 30", hex: "#FFB68C", bg: "bg-trustori-orange30"},
+                 {name: "Orange 20", hex: "#FFD3B5", bg: "bg-trustori-orange20"},
+                 {name: "Orange 10", hex: "#FFEBD9", bg: "bg-trustori-orange10"},
                  {name: "Orange 0", hex: "#FFF9F5", bg: "bg-trustori-orange0"}
             ]
         };
@@ -950,6 +967,49 @@
         ];
 
         // --- Functions ---
+
+        // Hex to CMYK Converter
+        function hexToCMYK(hex) {
+            let c = 0, m = 0, y = 0, k = 0;
+            hex = (hex.charAt(0) == "#") ? hex.substring(1, 7) : hex;
+
+            if (hex.length != 6) { return "CMYK: 0, 0, 0, 100"; }
+
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+
+            // Black
+            if (r == 0 && g == 0 && b == 0) {
+                return "CMYK: 0, 0, 0, 100";
+            }
+
+            r = r / 255;
+            g = g / 255;
+            b = b / 255;
+
+            k = 1 - Math.max(r, g, b);
+            c = (1 - r - k) / (1 - k);
+            m = (1 - g - k) / (1 - k);
+            y = (1 - b - k) / (1 - k);
+
+            return `CMYK: ${Math.round(c * 100)}, ${Math.round(m * 100)}, ${Math.round(y * 100)}, ${Math.round(k * 100)}`;
+        }
+
+        // Copy to Clipboard with temporary feedback
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.textContent;
+                element.textContent = "Copied!";
+                element.classList.add('text-green-500', 'scale-110');
+                setTimeout(() => {
+                    element.textContent = originalText;
+                    element.classList.remove('text-green-500', 'scale-110');
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
         
         // Theme Toggle Logic
         function setupThemeToggle() {
@@ -1029,11 +1089,13 @@
             const container = document.getElementById(elementId);
             let html = '';
             colors[key].forEach(c => {
-                html += `<div class="flex flex-col gap-2 group cursor-pointer">
+                const cmyk = hexToCMYK(c.hex);
+                html += `<div class="flex flex-col gap-2 group cursor-pointer" onclick="copyToClipboard('${c.hex}', this.querySelector('.hex-label'))">
                             <div class="w-full aspect-[3/2] rounded-lg border border-black/5 dark:border-white/10 ${c.bg} shadow-sm group-hover:scale-105 transition-transform duration-200"></div>
                             <div class="flex flex-col">
                                 <span class="text-xs font-bold text-trustori-slate90 dark:text-white group-hover:text-trustori-blue70 dark:group-hover:text-trustori-blue40 transition-colors">${c.name}</span>
-                                <span class="text-[10px] text-trustori-slate50 font-mono uppercase">${c.hex}</span>
+                                <span class="hex-label text-[10px] text-trustori-slate50 font-mono uppercase transition-all duration-200">${c.hex}</span>
+                                <span class="text-[9px] text-trustori-slate40 dark:text-trustori-slate60 font-mono mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">${cmyk}</span>
                             </div>
                          </div>`;
             });

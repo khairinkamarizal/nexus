@@ -170,8 +170,8 @@
                     <span class="hidden font-bold sm:inline-block text-trustori-slate90 dark:text-white transition-colors">Trustori Nexus</span>
                 </a>
                 <nav class="flex items-center space-x-6 text-sm font-medium">
-                    <a href="index.html" class="transition-colors hover:text-trustori-slate90/80 dark:hover:text-blue-400 text-trustori-slate90 dark:text-white">Design System</a>
-                    <a href="identity.html" class="transition-colors hover:text-trustori-slate90/80 dark:hover:text-blue-400 text-trustori-slate60 dark:text-trustori-slate40">Identity & Voice</a>
+                    <a href="index.html" class="transition-colors hover:text-trustori-slate90/80 dark:hover:text-blue-400 text-trustori-slate90 dark:text-white">Components</a>
+                    <a href="identity.html" class="transition-colors hover:text-trustori-slate90/80 dark:hover:text-blue-400 text-trustori-slate60 dark:text-trustori-slate40">Brand</a>
                 </nav>
             </div>
 
@@ -189,13 +189,7 @@
                 </button>
 
                 <div class="w-full flex-1 md:w-auto md:flex-none hidden md:block">
-                    <div class="inline-flex items-center rounded-sm font-medium transition-colors border border-trustori-slate20 dark:border-trustori-slate70 bg-transparent shadow-sm hover:bg-trustori-slate10 dark:hover:bg-trustori-slate80 h-9 px-4 py-2 relative w-full justify-start text-sm text-trustori-slate50 sm:pr-12 md:w-40 lg:w-64 cursor-not-allowed">
-                        <span class="hidden lg:inline-flex">Search documentation...</span>
-                        <span class="inline-flex lg:hidden">Search...</span>
-                        <kbd class="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-trustori-slate10 dark:bg-trustori-slate80 px-1.5 font-mono text-[10px] font-medium text-trustori-slate50 sm:flex">
-                            <span class="text-xs">⌘</span>K
-                        </kbd>
-                    </div>
+                    <!-- Search Removed -->
                 </div>
             </div>
         </div>
@@ -255,6 +249,37 @@
                             <div class="bg-trustori-orange0 dark:bg-trustori-orange100/20 rounded-2xl p-8 border border-trustori-orange10 dark:border-trustori-orange90 bento-card">
                                 <h3 class="text-sm font-bold text-trustori-orange60 dark:text-trustori-orange50 uppercase tracking-widest mb-6">Accent Orange</h3>
                                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="colors-orange"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="accessibility" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-bold tracking-tight mb-6 text-trustori-slate90 dark:text-white">Accessibility & Inclusion</h2>
+                    <p class="text-lg text-trustori-slate60 dark:text-trustori-slate40 max-w-3xl mb-8">
+                        Accessibility is not a feature; it's a requirement. We design for everyone, ensuring our platform is perceivable, operable, and robust for all users.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white dark:bg-[#111] rounded-2xl p-8 border border-trustori-slate20 dark:border-trustori-slate80 bento-card">
+                            <h3 class="text-xl font-bold text-trustori-slate90 dark:text-white mb-4">Color Contrast</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-trustori-blue70 rounded-lg">
+                                    <span class="text-white font-medium">Primary Button</span>
+                                    <span class="bg-black/20 px-2 py-1 rounded text-xs text-white font-mono">AAA 7.12</span>
+                                </div>
+                                <div class="flex items-center justify-between p-4 bg-trustori-slate0 dark:bg-[#16181A] rounded-lg border border-trustori-slate20 dark:border-trustori-slate80">
+                                    <span class="text-trustori-slate90 dark:text-white font-medium">Card Background</span>
+                                    <span class="bg-black/5 dark:bg-white/10 px-2 py-1 rounded text-xs text-trustori-slate60 dark:text-trustori-slate40 font-mono">AA 4.5+</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-[#111] rounded-2xl p-8 border border-trustori-slate20 dark:border-trustori-slate80 bento-card">
+                            <h3 class="text-xl font-bold text-trustori-slate90 dark:text-white mb-4">Focus States</h3>
+                            <p class="text-sm text-trustori-slate60 dark:text-trustori-slate40 mb-6">Interactive elements must have clearly visible focus indicators for keyboard navigation.</p>
+                            <div class="flex gap-4">
+                                <button class="px-6 py-2 rounded-md bg-white dark:bg-[#050505] border-2 border-trustori-blue50 ring-4 ring-trustori-blue20 outline-none text-trustori-blue70 dark:text-trustori-blue50 font-bold">Focused</button>
+                                <button class="px-6 py-2 rounded-md bg-trustori-slate10 dark:bg-trustori-slate80 text-trustori-slate50 dark:text-trustori-slate40 cursor-not-allowed">Disabled</button>
                             </div>
                         </div>
                     </div>
@@ -851,6 +876,7 @@
                     { id: "typography", label: "Typography" },
                     { id: "responsive", label: "Responsive Grid" },
                     { id: "iconography", label: "Iconography" },
+                    { id: "accessibility", label: "Accessibility" },
                 ],
             },
             {

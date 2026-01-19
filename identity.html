@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trustori Nexus Identity & Voice</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Hanken Grotesk"', "sans-serif"],
+                    },
+                    letterSpacing: {
+                        tighter: "-0.04em",
+                        tight: "-0.02em",
+                    },
+                    colors: {
+                        trustori: {
+                            blue0: "#F2F8FF",
+                            blue10: "#D9E9FF",
+                            blue20: "#ADCCFF",
+                            blue30: "#7FB0FF",
+                            blue40: "#5294FF",
+                            blue50: "#2A7DE1",
+                            blue60: "#1662CD",
+                            blue70: "#0047BA",
+                            blue80: "#00368F",
+                            blue90: "#002563",
+                            blue100: "#001438",
+                            orange0: "#FFF9F5",
+                            orange10: "#FFEBD9",
+                            orange20: "#FFD3B5",
+                            orange30: "#FFB68C",
+                            orange40: "#FF9057",
+                            orange50: "#FF671D",
+                            orange60: "#D94F11",
+                            orange70: "#B03805",
+                            orange80: "#872600",
+                            orange90: "#611900",
+                            orange100: "#3D0D00",
+                            slate0: "#F9FAFB",
+                            slate10: "#F0F2F5",
+                            slate20: "#E1E5E9",
+                            slate30: "#CDD3D9",
+                            slate40: "#B3BCC4",
+                            slate50: "#97A1AB",
+                            slate60: "#7A848D",
+                            slate70: "#5D666E",
+                            slate80: "#40464C",
+                            slate90: "#24272A",
+                            slate100: "#0E0F10",
+                        },
+                    },
+                    boxShadow: {
+                        "trust-sm": "0 1px 2px 0 rgba(0, 71, 186, 0.05)",
+                        "trust-md": "0 4px 6px -1px rgba(0, 71, 186, 0.1), 0 2px 4px -1px rgba(0, 71, 186, 0.06)",
+                        "trust-lg": "0 10px 15px -3px rgba(0, 71, 186, 0.1), 0 4px 6px -2px rgba(0, 71, 186, 0.05)",
+                        "trust-xl": "0 20px 25px -5px rgba(0, 71, 186, 0.1), 0 10px 10px -5px rgba(0, 71, 186, 0.04)",
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        /* Custom Animation Utilities replacing Framer Motion */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, visibility;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+        
+        /* Mobile Menu Transitions */
+        #mobile-menu-overlay {
+            transition: opacity 0.3s ease;
+        }
+        #mobile-menu-panel {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .menu-closed #mobile-menu-overlay { opacity: 0; pointer-events: none; }
+        .menu-open #mobile-menu-overlay { opacity: 1; pointer-events: auto; }
+        .menu-open #mobile-menu-panel { transform: translateX(0); }
+        
+        /* Evo-Style Sidebar */
+        .active-nav-link {
+            color: #0047BA; /* trustori-blue70 */
+            background-color: #F2F8FF; /* trustori-blue0 */
+            border-right: 3px solid #0047BA; /* trustori-blue70 */
+            border-left: none;
+            font-weight: 600;
+        }
+        
+        /* Custom Utilities for Bento Grids */
+        .bento-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-[#F9FAFB] font-sans text-trustori-slate90 selection:bg-trustori-blue10 selection:text-trustori-blue90 flex flex-col min-h-screen">
+
+    <header class="sticky top-0 z-50 w-full border-b border-trustori-slate20 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div class="container px-4 md:px-8 flex h-14 items-center max-w-screen-2xl mx-auto">
+            <button id="mobile-menu-btn" class="inline-flex items-center justify-center rounded-md p-2 text-trustori-slate60 hover:bg-trustori-slate10 hover:text-trustori-slate90 md:hidden mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <line x1="4" x2="20" y1="12" y2="12"></line>
+                    <line x1="4" x2="20" y1="6" y2="6"></line>
+                    <line x1="4" x2="20" y1="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="mr-4 hidden md:flex">
+                <a class="mr-6 flex items-center space-x-2" href="index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 170" class="h-6 w-auto text-trustori-slate90" preserveAspectRatio="xMinYMid meet">
+                        <g><g>
+                            <path class="fill-[#0047ba]" d="M58.33,96.5l-10.35-6c-1.19-.69-2.65-.69-3.83,0L7.82,111.47l-5.81,3.35c-2.68,1.55-2.68,5.41,0,6.96l5.81,3.35.72.41,7.87,4.55c2.61,1.51,5.83,1.51,8.44,0l33.5-19.35c1.03-.59,1.65-1.68,1.65-2.86v-8.46c0-1.2-.64-2.31-1.68-2.91"/>
+                            <path class="fill-[#2a7de1]" d="M88.8,114.08l-10.56-6.09-7.55-4.38-1.18-.68c-1.79-1.02-4.02.27-4.02,2.33v48.3c0,3.01,1.6,5.8,4.21,7.3l8.41,4.86,6.01,3.46c2.68,1.54,6.02-.39,6.02-3.48v-49.3c0-.96-.51-1.85-1.35-2.33"/>
+                            <path class="fill-[#2a7de1]" d="M67.52,91.48c6.68-3.85,13.35-7.7,20.03-11.55.03-.02.06-.04.09-.06l1.77-1.02c.46-.26.74-.75.74-1.28V16.16c0-3.01-1.61-5.8-4.22-7.31l-8.22-4.74-6.19-3.58c-2.68-1.55-6.02.39-6.02,3.48v57.13c0,1.13-1.22,1.84-2.2,1.27l-3.28-1.89-40-23.09-6.16-3.56c-2.68-1.55-6.03.38-6.03,3.48v17.56c0,2.58,1.38,4.96,3.61,6.25l41.75,24.1,6.83,3.95c1.42.81,2.83,1.63,4.24,2.45.27.14.73.33,1.33.35.97.04,1.67-.37,1.94-.55"/>
+                            <path class="fill-[#0047ba]" d="M154.34,48.38l-6.09-3.51-1.33-.77-.39-.23-6.59-3.8c-2.61-1.51-5.82-1.51-8.43,0l-34.67,20c-.77.45-1.25,1.27-1.25,2.16v8.67c0,1.54.82,2.97,2.16,3.74l9.69,5.6c1.16.67,2.6.67,3.77,0l5.34-3.08,29.98-17.29.39-.23,7.42-4.29c2.68-1.55,2.68-5.41,0-6.96"/>
+                            <path class="fill-[#2a7de1]" d="M143.81,108.92l-33.61-19.39-3.26-1.88-4.28-2.49c-1.09-.63-2.19-1.27-3.28-1.9-.6-.35-1.2-.69-1.79-1.04-.13-.09-.51-.31-1.04-.3-.47.01-.81.21-.95.3l-22.37,12.92c-.32.19-.51.54-.49.91.02.55.49.83.52.84,1.51.88,3.02,1.75,4.53,2.62l7.56,4.37h.02l4.78,2.76,5.45,3.15,39.72,22.95,6.45,3.69c3.08,1.75,6.9-.46,6.9-4.01v-15.06c0-3.48-1.85-6.69-4.86-8.42"/>
+                        </g></g>
+                    </svg>
+                    <span class="hidden font-bold sm:inline-block text-trustori-slate90">Trustori Nexus</span>
+                </a>
+                <nav class="flex items-center space-x-6 text-sm font-medium">
+                    <a href="index.html" class="transition-colors hover:text-trustori-slate90/80 text-trustori-slate60">Design System</a>
+                    <a href="identity.html" class="transition-colors hover:text-trustori-slate90/80 text-trustori-slate90">Identity & Voice</a>
+                </nav>
+            </div>
+
+            <div class="flex md:hidden mr-auto">
+                <span class="font-bold text-trustori-slate90">Trustori Nexus</span>
+            </div>
+
+            <div class="flex flex-1 items-center justify-end space-x-2">
+                <div class="w-full flex-1 md:w-auto md:flex-none hidden md:block">
+                    <div class="inline-flex items-center rounded-sm font-medium transition-colors border border-trustori-slate20 bg-transparent shadow-sm hover:bg-trustori-slate10 h-9 px-4 py-2 relative w-full justify-start text-sm text-trustori-slate50 sm:pr-12 md:w-40 lg:w-64 cursor-not-allowed">
+                        <span class="hidden lg:inline-flex">Search guidelines...</span>
+                        <span class="inline-flex lg:hidden">Search...</span>
+                        <kbd class="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-trustori-slate10 px-1.5 font-mono text-[10px] font-medium text-trustori-slate50 sm:flex">
+                            <span class="text-xs">⌘</span>K
+                        </kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-menu-container" class="menu-closed fixed inset-0 z-50 md:hidden pointer-events-none">
+        <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/80"></div>
+        <div id="mobile-menu-panel" class="absolute inset-y-0 left-0 h-full w-[300px] border-r border-trustori-slate20 bg-white p-6 shadow-2xl overflow-y-auto pointer-events-auto">
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                     <span class="font-bold text-trustori-slate90">Trustori Nexus</span>
+                     <button id="mobile-menu-close" class="rounded-sm p-1 hover:bg-trustori-slate10 text-trustori-slate60">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                     </button>
+                </div>
+                <div class="flex flex-col gap-4" id="mobile-nav-links">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10 max-w-screen-2xl mx-auto px-4 md:px-8">
+        
+        <aside class="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block overflow-y-auto">
+            <div class="h-full py-6 pr-6 lg:py-8">
+                <div class="w-full" id="sidebar-nav">
+                    </div>
+            </div>
+        </aside>
+
+        <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+            <div class="mx-auto w-full min-w-0 space-y-32 pb-32">
+                
+                <div class="space-y-2 pb-10 pt-4 fade-in-section">
+                    <h1 class="text-4xl font-bold tracking-tight text-trustori-slate90 lg:text-5xl">Identify & Voice</h1>
+                    <p class="text-lg text-trustori-slate60">Guidelines for key messaging, tonal nuance, and brand personality.</p>
+                </div>
+
+                <section id="principles" class="space-y-8 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-bold tracking-tight mb-8 text-trustori-slate90">Brand Principles</h2>
+                    <p class="text-xl text-trustori-slate60 max-w-3xl leading-relaxed mb-10">
+                        Our principles are the foundation of everything we build. They guide our decisions, shape our voice, and define our relationship with our users.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
+                        <!-- Card 1: Large Span -->
+                        <div class="col-span-1 md:col-span-2 bg-white rounded-2xl p-8 border border-trustori-slate20 relative overflow-hidden bento-card flex flex-col justify-between">
+                            <div class="relative z-10">
+                                <h3 class="text-2xl font-bold text-trustori-slate90 mb-4">Secure by Design</h3>
+                                <p class="text-trustori-slate60 text-lg max-w-md">Trust is not an add-on. We prioritize security and data integrity in every pixel, ensuring our users feel protected without friction.</p>
+                            </div>
+                            <div class="absolute right-0 bottom-0 w-64 h-64 bg-gradient-to-tl from-trustori-blue10 to-transparent rounded-tl-full opacity-50"></div>
+                            <div class="mt-8 flex gap-2">
+                                <span class="px-3 py-1 bg-trustori-blue0 text-trustori-blue70 rounded-full text-sm font-medium">Reliable</span>
+                                <span class="px-3 py-1 bg-trustori-blue0 text-trustori-blue70 rounded-full text-sm font-medium">Proven</span>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Highlight -->
+                        <div class="col-span-1 bg-trustori-blue70 rounded-2xl p-8 text-white relative overflow-hidden bento-card flex flex-col justify-between">
+                            <div class="relative z-10">
+                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-2">Spirited</h3>
+                                <p class="text-white/80">We are optimistic about the future. Our technology enables new possibilities.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="col-span-1 bg-white rounded-2xl p-8 border border-trustori-slate20 bento-card">
+                            <h3 class="text-xl font-bold text-trustori-slate90 mb-3">Accessible</h3>
+                            <p class="text-trustori-slate60 mb-6">Inclusive for everyone, everywhere. No barriers.</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="h-16 bg-trustori-slate10 rounded-lg"></div>
+                                <div class="h-16 bg-trustori-slate10 rounded-lg"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Detailed -->
+                        <div class="col-span-1 md:col-span-2 bg-[#111] text-white rounded-2xl p-8 bento-card flex gap-8 items-center">
+                             <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4">Human Centric</h3>
+                                <p class="text-gray-400 text-lg">We speak human, not machine. We translate complex blockchain logic into simple, tangible benefits for everyday people.</p>
+                             </div>
+                             <div class="hidden md:block w-32 h-32 rounded-full border-4 border-white/10 flex items-center justify-center">
+                                <span class="text-4xl">☺</span>
+                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tone" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-medium tracking-tight mb-6 text-trustori-slate90">Voice & Tone Matrix</h2>
+                    <p class="text-base text-trustori-slate70 max-w-3xl mb-8">
+                        Our voice remains consistent, but our tone adapts to the context of the user journey. Use this matrix to determine the appropriate emotional resonance for your content.
+                    </p>
+                    
+                    <div class="w-full text-left text-sm border border-trustori-slate20 rounded-md overflow-hidden shadow-sm">
+                        <div class="grid grid-cols-[1fr_2fr_2fr] bg-trustori-slate0 p-4 border-b border-trustori-slate20 font-medium text-trustori-slate50 uppercase tracking-widest text-xs">
+                            <div>Context</div>
+                            <div>Tone Attribute</div>
+                            <div>Example</div>
+                        </div>
+                        <div class="divide-y divide-trustori-slate10 bg-white">
+                            <div class="grid grid-cols-[1fr_2fr_2fr] p-6 gap-4">
+                                <div class="font-medium text-trustori-slate90">Onboarding & Discovery</div>
+                                <div class="text-trustori-slate60">
+                                    <span class="text-trustori-blue60 font-medium">Inviting & Inspiring</span>. Use active verbs and focus on benefits. Keep it light but professional.
+                                </div>
+                                <div class="text-trustori-slate70 italic">"Start your journey to total transparency. Verify your first item in seconds."</div>
+                            </div>
+                            <div class="grid grid-cols-[1fr_2fr_2fr] p-6 gap-4">
+                                <div class="font-medium text-trustori-slate90">System Status & Errors</div>
+                                <div class="text-trustori-slate60">
+                                    <span class="text-trustori-orange60 font-medium">Direct & Constructive</span>. Avoid jargon. Explain exactly what happened and how to fix it without blaming the user.
+                                </div>
+                                <div class="text-trustori-slate70 italic">"We couldn't verify that code. Please check the serial number and try again."</div>
+                            </div>
+                            <div class="grid grid-cols-[1fr_2fr_2fr] p-6 gap-4">
+                                <div class="font-medium text-trustori-slate90">Legal & Compliance</div>
+                                <div class="text-trustori-slate60">
+                                    <span class="text-trustori-slate60 font-medium">Precise & Objective</span>. Zero ambiguity. Use standard terminology where accuracy is legally required.
+                                </div>
+                                <div class="text-trustori-slate70 italic">"This asset was minted on the Ethereum blockchain on Jan 12, 2024."</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="logo" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-medium tracking-tight mb-6 text-trustori-slate90">Logo Guidelines</h2>
+                    <p class="text-base text-trustori-slate70 max-w-3xl mb-8">
+                        The Trustori Nexus logo is the primary identifier of our brand. Proper usage ensures consistency and brand recognition across all touchpoints.
+                    </p>
+
+                    <div class="space-y-10">
+                        <div class="p-12 bg-trustori-slate0 border border-trustori-slate20 rounded-md flex items-center justify-center relative overlow-hidden">
+                            <!-- Clear space visualization -->
+                             <div class="relative p-8 border border-dashed border-trustori-blue40/50 rounded-sm">
+                                <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono text-trustori-blue50">x</span>
+                                <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-mono text-trustori-blue50">x</span>
+                                <span class="absolute top-1/2 -left-8 -translate-y-1/2 text-xs font-mono text-trustori-blue50">x</span>
+                                <span class="absolute top-1/2 -right-8 -translate-y-1/2 text-xs font-mono text-trustori-blue50">x</span>
+                                <img src="assets/nexus_logo.svg" alt="Trustori Nexus Logo" class="h-16 w-auto">
+                             </div>
+                             <p class="absolute bottom-4 right-4 text-xs text-trustori-slate50 font-mono">x = Height of 'N'</p>
+                        </div>
+
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-lg font-bold text-trustori-slate90 mb-4">Clear Space</h3>
+                                <p class="text-sm text-trustori-slate60 leading-relaxed">
+                                    Always maintain clear space around the logo to ensure visibility and impact. The minimum clear space is defined as 'x', where 'x' is the height of the letter 'N' in the logo.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-trustori-slate90 mb-4">Minimum Size</h3>
+                                <div class="flex items-end gap-8 p-6 bg-trustori-slate0 rounded-md border border-trustori-slate10">
+                                    <div class="flex flex-col gap-2">
+                                        <img src="assets/nexus_logo.svg" alt="Logo Small" class="h-8 w-auto">
+                                        <span class="text-xs font-mono text-trustori-slate50">32px / 2rem</span>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                         <img src="assets/nexus_logo.svg" alt="Logo Minimum" class="h-6 w-auto">
+                                        <span class="text-xs font-mono text-trustori-slate50">24px / 1.5rem</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-trustori-slate60 leading-relaxed mt-4">
+                                    The logo should never be rendered smaller than 24px in height to maintain legibility.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-trustori-slate90 mb-6">Misuse Examples (Don'ts)</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                <div class="space-y-3 group">
+                                    <div class="aspect-video bg-trustori-slate0 border border-trustori-slate20 rounded-md flex items-center justify-center overflow-hidden relative">
+                                         <img src="assets/nexus_logo.svg" class="h-10 w-auto scale-x-[1.5] opacity-80" alt="Stretched Logo">
+                                         <div class="absolute inset-0 bg-red-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div class="bg-red-600 text-white rounded-full p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                                         </div>
+                                    </div>
+                                    <p class="text-xs text-red-600 font-medium text-center">Do not stretch</p>
+                                </div>
+                                <div class="space-y-3 group">
+                                    <div class="aspect-video bg-trustori-slate0 border border-trustori-slate20 rounded-md flex items-center justify-center overflow-hidden relative">
+                                         <img src="assets/nexus_logo.svg" class="h-10 w-auto rotate-12 opacity-80" alt="Rotated Logo">
+                                          <div class="absolute inset-0 bg-red-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div class="bg-red-600 text-white rounded-full p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                                         </div>
+                                    </div>
+                                    <p class="text-xs text-red-600 font-medium text-center">Do not rotate</p>
+                                </div>
+                                <div class="space-y-3 group">
+                                    <div class="aspect-video bg-trustori-slate0 border border-trustori-slate20 rounded-md flex items-center justify-center overflow-hidden relative">
+                                        <div class="relative">
+                                             <img src="assets/nexus_logo.svg" class="h-10 w-auto opacity-80" style="filter: hue-rotate(90deg);">
+                                        </div>
+                                         <div class="absolute inset-0 bg-red-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div class="bg-red-600 text-white rounded-full p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                                         </div>
+                                    </div>
+                                    <p class="text-xs text-red-600 font-medium text-center">Do not recolor</p>
+                                </div>
+                                <div class="space-y-3 group">
+                                    <div class="aspect-video bg-trustori-slate90 border border-trustori-slate20 rounded-md flex items-center justify-center overflow-hidden relative">
+                                         <img src="assets/nexus_logo.svg" class="h-10 w-auto opacity-50" alt="Low Contrast">
+                                          <div class="absolute inset-0 bg-red-500/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div class="bg-red-600 text-white rounded-full p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></div>
+                                         </div>
+                                    </div>
+                                    <p class="text-xs text-red-600 font-medium text-center">Do not use on low contrast</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="visuals" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-medium tracking-tight mb-6 text-trustori-slate90">Visual Identity</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div>
+                            <h3 class="text-xl font-bold text-trustori-slate90 mb-4">Imagery Style</h3>
+                            <p class="text-trustori-slate60 mb-6">Our imagery bridges the digital and physical worlds. It should feel authentic, focusing on the human element behind the technology.</p>
+                            <div class="space-y-4">
+                                <div class="h-48 rounded-md bg-gradient-to-br from-trustori-slate10 to-trustori-slate20 flex items-center justify-center border border-trustori-slate20">
+                                    <span class="text-trustori-slate50 italic">Human-focused photography placeholder</span>
+                                </div>
+                                <div class="flex gap-4">
+                                     <div class="h-24 flex-1 rounded-md bg-gradient-to-tr from-trustori-blue10 to-white border border-trustori-blue10"></div>
+                                     <div class="h-24 flex-1 rounded-md bg-gradient-to-bl from-trustori-orange10 to-white border border-trustori-orange10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                             <h3 class="text-xl font-bold text-trustori-slate90 mb-4">Graphic Elements</h3>
+                             <p class="text-trustori-slate60 mb-6">We use clean lines, ample whitespace, and subtle rounded corners. Our "link" motif represents verification and connection.</p>
+                             
+                             <div class="grid grid-cols-2 gap-4">
+                                <div class="p-6 bg-trustori-slate0 border border-trustori-slate20 rounded-md">
+                                    <div class="h-12 w-12 rounded-full border-2 border-trustori-blue50 flex items-center justify-center mb-2">
+                                        <div class="h-2 w-2 bg-trustori-blue50 rounded-full"></div>
+                                    </div>
+                                    <span class="text-xs font-mono text-trustori-slate50">Connection Node</span>
+                                </div>
+                                <div class="p-6 bg-trustori-slate0 border border-trustori-slate20 rounded-md">
+                                     <div class="w-full h-2 bg-trustori-slate10 rounded-full mb-3 overflow-hidden">
+                                        <div class="h-full w-2/3 bg-trustori-blue50 rounded-full"></div>
+                                     </div>
+                                     <span class="text-xs font-mono text-trustori-slate50">Progress Line</span>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="color-usage" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-medium tracking-tight mb-6 text-trustori-slate90">Color Usage</h2>
+                    <p class="text-base text-trustori-slate70 max-w-3xl mb-8">
+                        While our palette is extensive, our usage is disciplined. We follow a 60-30-10 rule to maintain a clean, professional aesthetic.
+                    </p>
+
+                    <div class="w-full h-16 rounded-md flex overflow-hidden border border-trustori-slate20 mb-8">
+                        <div class="w-[60%] bg-trustori-slate0 flex items-center justify-center text-xs font-medium text-trustori-slate60">60% Neutral (Backgrounds/Surface)</div>
+                        <div class="w-[30%] bg-trustori-blue70 flex items-center justify-center text-xs font-medium text-white">30% Primary (Brand/Action)</div>
+                        <div class="w-[10%] bg-trustori-orange50 flex items-center justify-center text-xs font-medium text-white">10% Accent</div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-md border border-trustori-slate20 shadow-sm">
+                            <h4 class="font-bold text-trustori-slate90 mb-2">Primary</h4>
+                            <div class="h-20 bg-trustori-blue70 rounded mb-3"></div>
+                            <p class="text-xs text-trustori-slate60">Used for primary actions, header links, and key brand elements.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-md border border-trustori-slate20 shadow-sm">
+                            <h4 class="font-bold text-trustori-slate90 mb-2">Neutral</h4>
+                            <div class="h-20 bg-trustori-slate0 border border-trustori-slate10 rounded mb-3"></div>
+                            <p class="text-xs text-trustori-slate60">Used for backgrounds, borders, and secondary text to reduce visual load.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-md border border-trustori-slate20 shadow-sm">
+                            <h4 class="font-bold text-trustori-slate90 mb-2">Accent</h4>
+                            <div class="h-20 bg-trustori-orange50 rounded mb-3"></div>
+                            <p class="text-xs text-trustori-slate60">Used sparingly for high-priority alerts, energetic highlights, or "wow" moments.</p>
+                        </div>
+                    </div>
+                </section>
+
+                </section>
+
+                <section id="accessibility" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-bold tracking-tight mb-6 text-trustori-slate90">Accessibility & Inclusion</h2>
+                    <p class="text-lg text-trustori-slate60 max-w-3xl mb-8">
+                        Accessibility is not a feature; it's a requirement. We design for everyone, ensuring our platform is perceivable, operable, and robust for all users.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white rounded-2xl p-8 border border-trustori-slate20 bento-card">
+                            <h3 class="text-xl font-bold text-trustori-slate90 mb-4">Color Contrast</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-trustori-blue70 rounded-lg">
+                                    <span class="text-white font-medium">Primary Button</span>
+                                    <span class="bg-black/20 px-2 py-1 rounded text-xs text-white font-mono">AAA 7.12</span>
+                                </div>
+                                <div class="flex items-center justify-between p-4 bg-trustori-slate0 rounded-lg border border-trustori-slate20">
+                                    <span class="text-trustori-slate90 font-medium">Card Background</span>
+                                    <span class="bg-black/5 px-2 py-1 rounded text-xs text-trustori-slate60 font-mono">AA 4.5+</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-2xl p-8 border border-trustori-slate20 bento-card">
+                            <h3 class="text-xl font-bold text-trustori-slate90 mb-4">Focus States</h3>
+                            <p class="text-sm text-trustori-slate60 mb-6">Interactive elements must have clearly visible focus indicators for keyboard navigation.</p>
+                            <div class="flex gap-4">
+                                <button class="px-6 py-2 rounded-md bg-white border-2 border-trustori-blue50 ring-4 ring-trustori-blue20 outline-none text-trustori-blue70 font-bold">Focused</button>
+                                <button class="px-6 py-2 rounded-md bg-trustori-slate10 text-trustori-slate50 cursor-not-allowed">Disabled</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="motion" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-bold tracking-tight mb-6 text-trustori-slate90">Motion & Interaction</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                         <div class="bg-trustori-slate90 text-white p-8 rounded-2xl col-span-1 md:col-span-2 flex flex-col justify-center bento-card">
+                             <h3 class="text-2xl font-bold mb-4">Natural Easing</h3>
+                             <p class="text-gray-400 mb-8 max-w-md">Objects should move with weight and momentum. Avoid linear transitions. Use our standard cubic-bezier for consistency.</p>
+                             <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden relative">
+                                <div class="absolute top-0 left-0 h-full w-1/3 bg-trustori-blue50 rounded-full animate-pulse"></div>
+                             </div>
+                             <p class="font-mono text-xs mt-4 text-trustori-blue20">cubic-bezier(0.16, 1, 0.3, 1)</p>
+                         </div>
+                         <div class="bg-white border border-trustori-slate20 p-8 rounded-2xl bento-card flex flex-col items-center justify-center text-center">
+                             <div class="w-16 h-16 bg-trustori-orange10 text-trustori-orange60 rounded-full flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+                             </div>
+                             <h4 class="font-bold text-trustori-slate90">Micro-interactions</h4>
+                             <p class="text-xs text-trustori-slate60 mt-2">Delight users with subtle feedback.</p>
+                         </div>
+                    </div>
+                </section>
+
+                <section id="downloads" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-bold tracking-tight mb-6 text-trustori-slate90">Downloads</h2>
+                    <div class="bg-[#F0F5FF] border border-trustori-blue10 rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between gap-8 bento-card">
+                        <div>
+                            <h3 class="text-2xl font-bold text-trustori-blue90 mb-2">Essential Brand Assets</h3>
+                            <p class="text-trustori-blue70">Download the official logo pack, font files, and slide templates.</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button class="inline-flex items-center justify-center rounded-lg bg-trustori-blue70 text-white px-6 py-3 font-bold hover:bg-trustori-blue80 transition-colors shadow-lg shadow-trustori-blue20/50">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                Download All Assets (ZIP)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="writing" class="space-y-12 scroll-m-24 fade-in-section">
+                    <h2 class="text-3xl font-medium tracking-tight mb-6 text-trustori-slate90">Writing Mechanics</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <h3 class="text-lg font-medium text-trustori-slate90">Do's</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-3 text-sm text-trustori-slate70">
+                                    <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <span><strong>Use Sentence Case</strong> for all headlines, buttons, and navigation (e.g., "Sign up," not "Sign Up").</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-sm text-trustori-slate70">
+                                    <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <span><strong>Be concise.</strong> If you can say it in three words, don't use five.</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-sm text-trustori-slate70">
+                                    <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <span><strong>Focus on the user.</strong> Use "You" and "Your" more than "We" or "Our."</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="space-y-6">
+                            <h3 class="text-lg font-medium text-trustori-slate90">Don'ts</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-3 text-sm text-trustori-slate70">
+                                    <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <span><strong>Don't use tech jargon</strong> like "hash," "node," or "distributed ledger" unless the user is an admin.</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-sm text-trustori-slate70">
+                                    <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <span><strong>Don't blame the user.</strong> Avoid "You entered the wrong password." Use "Password not recognized."</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-sm text-trustori-slate70">
+                                    <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    <span><strong>Don't mix button styles.</strong> Stick to the designated verb-noun structure (e.g., "Save Changes").</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-trustori-slate0 border border-trustori-slate10 rounded-md">
+                        <h4 class="text-sm font-bold text-trustori-slate90 uppercase tracking-wide mb-4">Date & Time Formatting</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <span class="block text-xs text-trustori-slate50 mb-1">Standard Date</span>
+                                <span class="font-mono text-sm text-trustori-slate90">Jan 12, 2024</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-trustori-slate50 mb-1">Full Date</span>
+                                <span class="font-mono text-sm text-trustori-slate90">January 12, 2024</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-trustori-slate50 mb-1">Time</span>
+                                <span class="font-mono text-sm text-trustori-slate90">14:30 GMT</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Data ---
+        const navigationGroups = [
+            {
+                title: "Brand Core",
+                items: [
+                    { id: "principles", label: "Principles" },
+                    { id: "tone", label: "Voice & Tone" },
+                ],
+            },
+            {
+                title: "Visual Identity",
+                items: [
+                    { id: "logo", label: "Logo Guidelines" },
+                    { id: "visuals", label: "Visual System" },
+                    { id: "color-usage", label: "Color Usage" },
+                    { id: "motion", label: "Motion & Interaction" },
+                ],
+            },
+            {
+                title: "System",
+                items: [
+                     { id: "accessibility", label: "Accessibility" },
+                     { id: "writing", label: "Writing Mechanics" },
+                     { id: "downloads", label: "Downloads" },
+                ],
+            }
+        ];
+
+        // --- Functions ---
+
+        // Render Sidebar Navigation
+        function renderSidebar() {
+            const container = document.getElementById('sidebar-nav');
+            let html = '';
+            navigationGroups.forEach(group => {
+                html += `<div class="pb-4">
+                            <h4 class="mb-1 rounded-md px-2 py-1 text-sm font-semibold text-trustori-slate90">${group.title}</h4>
+                            <div class="grid grid-flow-row auto-rows-max text-sm">`;
+                group.items.forEach(item => {
+                    html += `<a href="#${item.id}" class="group flex w-full items-center rounded-md border border-transparent px-2 py-1.5 text-trustori-slate60 hover:underline hover:text-trustori-slate90">${item.label}</a>`;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Render Mobile Navigation
+        function renderMobileNav() {
+            const container = document.getElementById('mobile-nav-links');
+            let html = '';
+            navigationGroups.forEach(group => {
+                html += `<div class="pb-4">
+                            <h4 class="mb-2 rounded-md px-2 py-1 text-sm font-semibold text-trustori-slate90">${group.title}</h4>
+                            <div class="flex flex-col space-y-1 text-sm">`;
+                group.items.forEach(item => {
+                    html += `<a href="#${item.id}" class="mobile-link block rounded-md border border-transparent px-2 py-2 text-trustori-slate60 hover:bg-trustori-slate10 hover:text-trustori-slate90 transition-colors">${item.label}</a>`;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Mobile Menu Logic
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const container = document.getElementById('mobile-menu-container');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const links = document.querySelectorAll('.mobile-link');
+
+            function openMenu() {
+                container.classList.remove('pointer-events-none');
+                container.classList.remove('menu-closed');
+                container.classList.add('menu-open');
+            }
+
+            function closeMenu() {
+                container.classList.remove('menu-open');
+                container.classList.add('menu-closed');
+                setTimeout(() => {
+                    container.classList.add('pointer-events-none');
+                }, 300); // match transition duration
+            }
+
+            btn.addEventListener('click', openMenu);
+            closeBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+            
+            links.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+        }
+
+        // Animation Logic (Intersection Observer)
+        function setupAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-section').forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // Scroll Spy Logic
+        function highlightNavigation() {
+            const sections = navigationGroups.flatMap(group => group.items.map(item => document.getElementById(item.id))).filter(Boolean);
+            const scrollValues = window.scrollY + 100; // Offset for sticky header
+
+            let currentSection = null;
+            
+            for (const section of sections) {
+                if (section.offsetTop <= scrollValues) {
+                    currentSection = section;
+                }
+            }
+
+            const sidebarLinks = document.querySelectorAll('#sidebar-nav a');
+            sidebarLinks.forEach(link => {
+                link.classList.remove('active-nav-link', 'font-medium', 'text-trustori-slate90', 'bg-trustori-slate10');
+                link.classList.add('text-trustori-slate60', 'border-l-0', 'pl-2'); // Reset base styles if needed in CSS, simplified here by class toggle
+                
+                // We initially render with basic classes. Let's ensure we toggle correctly.
+                // The original renderSidebar uses: text-trustori-slate60 hover:underline hover:text-trustori-slate90
+                
+                if (currentSection && link.getAttribute('href') === `#${currentSection.id}`) {
+                    link.classList.add('active-nav-link', 'font-medium');
+                    link.classList.remove('text-trustori-slate60');
+                }
+            });
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            renderMobileNav();
+            setupMobileMenu();
+            setupAnimations();
+            
+            // Initial highlight
+            highlightNavigation();
+            
+            // Scroll listener
+            window.addEventListener('scroll', () => {
+                highlightNavigation();
+            });
+        });
+
+    </script>
+</body>
+</html>

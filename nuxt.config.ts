@@ -30,4 +30,7 @@ export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "@nuxtjs/seo"],
   css: ["@/assets/css/tailwind.css"],
   srcDir: "app",
+  nitro: {
+    preset: "cloudflare-pages",
+  },
 });

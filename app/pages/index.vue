@@ -206,7 +206,7 @@ onMounted(() => {
           class="mx-auto w-full min-w-0 flex flex-col divide-y divide-trustori-slate20 dark:divide-trustori-slate80 pb-32">
           <div class="space-y-2 pt-14 pb-16 fade-in-section">
             <h1
-              class="text-4xl font-medium tracking-tight text-trustori-slate90 lg:text-5xl">
+              class="text-4xl font-medium tracking-tight text-trustori-slate90 lg:text-5xl dark:text-trustori-slate0">
               Trustori Nexus
             </h1>
             <p class="text-lg text-trustori-slate60">
